@@ -9,21 +9,24 @@
 
 
 void createNeuralNetwork() {
-    double inputs[4][2] =
-            {
-                    {0, 0},
-                    {0, 1},
-                    {1, 0},
-                    {1, 1}
-            };
+    double **inputs = create2DArray(4, 2);
+    inputs[0][0] = 0;
+    inputs[0][1] = 0;
 
-    int responses[4][1] =
-            {
-                    {0},
-                    {1},
-                    {1},
-                    {0}
-            };
+    inputs[1][0] = 0;
+    inputs[1][1] = 1;
+
+    inputs[2][0] = 1;
+    inputs[2][1] = 0;
+
+    inputs[3][0] = 1;
+    inputs[3][1] = 1;
+
+    double **responses= create2DArray(4, 1);
+    inputs[0][0] = 0;
+    inputs[1][0] = 1;
+    inputs[2][0] = 1;
+    inputs[3][0] = 0;
 
     int inputNeurons = 2;
     int hiddenNeurons = 2;
@@ -36,21 +39,51 @@ void createNeuralNetwork() {
     initMatrixWithRandomValue(output_layer_weights, hiddenNeurons, outputNeurons);
 
     //Training
-    for(int i = 0; i < 2; i++){
-        double **hidden_layer = applySigmoidToArray(
-                multiplyMatrix(inputs, hidden_layer_weights, 4,2, inputNeurons, hiddenNeurons)
-                , )
+    for (int i = 0; i < 1; i++) {
+
+        //                        FEED FORWARD
+        double **hiddenLayer = applySigmoidToArray(
+                multiplyMatrix(inputs,
+                               hidden_layer_weights,
+                               4,
+                               2,
+                               inputNeurons,
+                               hiddenNeurons),
+                               4, hiddenNeurons);
+
+        double **outputLayer = applySigmoidToArray(
+                multiplyMatrix(hiddenLayer,
+                               output_layer_weights,
+                               4,
+                               hiddenNeurons,
+                               hiddenNeurons,
+                               outputNeurons),
+                4, outputNeurons);
 
 
+        //                      BACKPROPAGATION
+        double **outputLayerError = subtractionMatrix(responses, outputLayer, 4, outputNeurons);
+        printArray(outputLayerError, 4, outputNeurons);
 
+        double **outputLayerDelta = hadamardProduct(outputLayerError,
+                                                    applySigmoidPrimeToArray(outputLayer, 4, outputNeurons),
+                                                    4, outputNeurons);
 
+        double **outputLayerWeightTransposed = transposeMatrix(output_layer_weights, hiddenNeurons, outputNeurons);
+        double **hiddenLayerError = multiplyMatrix(outputLayerDelta, outputLayerWeightTransposed, 4, outputNeurons, outputNeurons, hiddenNeurons);
+
+        double **hiddenLayerDelta = hadamardProduct(hiddenLayerError,
+                                                    applySigmoidPrimeToArray(hiddenLayer, 4, outputNeurons),
+                                                    4, outputNeurons);
+
+        double **hiddenLayerTransposed = transposeMatrix(hiddenLayer, 4, hiddenNeurons);
+        additionMatrix(output_layer_weights,
+                       multiplyMatrix(hiddenLayerTransposed, outputLayerDelta, hiddenNeurons, 4, 4, outputNeurons),
+                       hiddenNeurons, outputNeurons);
+
+        double **inputLayerTransposed = transposeMatrix(inputs, 4, 2);
+        additionMatrix(hidden_layer_weights,
+                       multiplyMatrix(inputLayerTransposed, hiddenLayerDelta, 2, 4, 4, outputNeurons),
+                       inputNeurons, hiddenNeurons);
     }
 }
-
-
-
-
-
-
-
-
