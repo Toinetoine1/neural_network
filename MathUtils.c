@@ -6,15 +6,8 @@
 #include <math.h>
 #include "MathUtils.h"
 
-double randfrom(double min, double max)
-{
-    double range = (max - min);
-    double div = RAND_MAX / range;
-    return min + (rand() / div);
-}
-
 double sigmoid(double x) {
-    return 1/(1+ exp(-x));
+    return 1/(1+exp(-x));
 }
 
 double sigmoidPrime(double x) {

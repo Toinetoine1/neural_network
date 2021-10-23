@@ -2,88 +2,76 @@
 // Created by toinetoine1 on 10/10/2021.
 //
 
-#include "2DArray.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include "XOR.h"
-#include "MathUtils.h"
 #include "MatrixUtils.h"
+#include "NeuralNetwork.h"
+#include "2DArray.h"
 
+void createAndRunXOR(){
+    struct NeuralNetwork neuralNetwork;
+    struct NeuralNetwork* nn = &neuralNetwork;
+    neuralNetwork.inputNeurons = 2;
+    neuralNetwork.hiddenNeurons = 2;
+    neuralNetwork.outputNeurons = 1;
 
-void createNeuralNetwork() {
-    double **inputs = create2DArray(4, 2);
-    inputs[0][0] = 0;
-    inputs[0][1] = 0;
+    neuralNetwork.learningRate = 0.1;
+    neuralNetwork.epoch = 10000;
 
-    inputs[1][0] = 0;
-    inputs[1][1] = 1;
+    neuralNetwork.trainingSets = 4;
 
-    inputs[2][0] = 1;
-    inputs[2][1] = 0;
+    double **trainingInputs = create2DArray(neuralNetwork.trainingSets, neuralNetwork.inputNeurons);
+    trainingInputs[0][0] = 0;
+    trainingInputs[0][1] = 0;
 
-    inputs[3][0] = 1;
-    inputs[3][1] = 1;
+    trainingInputs[1][0] = 0;
+    trainingInputs[1][1] = 1;
 
-    double **responses= create2DArray(4, 1);
-    inputs[0][0] = 0;
-    inputs[1][0] = 1;
-    inputs[2][0] = 1;
-    inputs[3][0] = 0;
+    trainingInputs[2][0] = 1;
+    trainingInputs[2][1] = 0;
 
-    int inputNeurons = 2;
-    int hiddenNeurons = 2;
-    int outputNeurons = 1;
+    trainingInputs[3][0] = 1;
+    trainingInputs[3][1] = 1;
+    nn->trainingInputs = trainingInputs;
 
-    double **hidden_layer_weights = create2DArray(inputNeurons, hiddenNeurons);
-    initMatrixWithRandomValue(hidden_layer_weights, inputNeurons, hiddenNeurons);
+    double **trainingOutputs = create2DArray(neuralNetwork.trainingSets, neuralNetwork.outputNeurons);
+    trainingOutputs[0][0] = 0;
+    trainingOutputs[1][0] = 1;
+    trainingOutputs[2][0] = 1;
+    trainingOutputs[3][0] = 0;
+    nn->trainingOutputs = trainingOutputs;
 
-    double **output_layer_weights = create2DArray(hiddenNeurons, outputNeurons);
-    initMatrixWithRandomValue(output_layer_weights, hiddenNeurons, outputNeurons);
+    neuralNetwork.hiddenLayer = malloc(sizeof(double) * neuralNetwork.hiddenNeurons);
+    neuralNetwork.outputLayer = malloc(sizeof(double) * neuralNetwork.outputNeurons);
 
-    //Training
-    for (int i = 0; i < 1; i++) {
+    neuralNetwork.hiddenLayerBias = malloc(sizeof(double) * neuralNetwork.hiddenNeurons);
+    neuralNetwork.outputLayerBias = malloc(sizeof(double) * neuralNetwork.outputNeurons);
 
-        //                        FEED FORWARD
-        double **hiddenLayer = applySigmoidToArray(
-                multiplyMatrix(inputs,
-                               hidden_layer_weights,
-                               4,
-                               2,
-                               inputNeurons,
-                               hiddenNeurons),
-                               4, hiddenNeurons);
+    neuralNetwork.hiddenWeights = create2DArray(neuralNetwork.inputNeurons, neuralNetwork.hiddenNeurons);
+    neuralNetwork.outputWeights = create2DArray(neuralNetwork.hiddenNeurons, neuralNetwork.outputNeurons);
 
-        double **outputLayer = applySigmoidToArray(
-                multiplyMatrix(hiddenLayer,
-                               output_layer_weights,
-                               4,
-                               hiddenNeurons,
-                               hiddenNeurons,
-                               outputNeurons),
-                4, outputNeurons);
+    initArrayWithZero(nn->hiddenLayerBias, nn->hiddenNeurons);
+    initArrayWithZero(nn->outputLayerBias, nn->outputNeurons);
 
+    initMatrixWithRandomValue(nn->hiddenWeights, nn->inputNeurons, nn->hiddenNeurons);
+    initMatrixWithRandomValue(nn->outputWeights, nn->hiddenNeurons, nn->outputNeurons);
 
-        //                      BACKPROPAGATION
-        double **outputLayerError = subtractionMatrix(responses, outputLayer, 4, outputNeurons);
-        printArray(outputLayerError, 4, outputNeurons);
+    trainNeuralNetwork(nn);
 
-        double **outputLayerDelta = hadamardProduct(outputLayerError,
-                                                    applySigmoidPrimeToArray(outputLayer, 4, outputNeurons),
-                                                    4, outputNeurons);
+    predict(nn, trainingInputs[0]);
+    printf("Result: %f\n", nn->outputLayer[0]);
 
-        double **outputLayerWeightTransposed = transposeMatrix(output_layer_weights, hiddenNeurons, outputNeurons);
-        double **hiddenLayerError = multiplyMatrix(outputLayerDelta, outputLayerWeightTransposed, 4, outputNeurons, outputNeurons, hiddenNeurons);
+    predict(nn, trainingInputs[1]);
+    printf("Result: %f\n", nn->outputLayer[0]);
 
-        double **hiddenLayerDelta = hadamardProduct(hiddenLayerError,
-                                                    applySigmoidPrimeToArray(hiddenLayer, 4, outputNeurons),
-                                                    4, outputNeurons);
+    predict(nn, trainingInputs[2]);
+    printf("Result: %f\n", nn->outputLayer[0]);
 
-        double **hiddenLayerTransposed = transposeMatrix(hiddenLayer, 4, hiddenNeurons);
-        additionMatrix(output_layer_weights,
-                       multiplyMatrix(hiddenLayerTransposed, outputLayerDelta, hiddenNeurons, 4, 4, outputNeurons),
-                       hiddenNeurons, outputNeurons);
+    predict(nn, trainingInputs[3]);
+    printf("Result: %f\n", nn->outputLayer[0]);
 
-        double **inputLayerTransposed = transposeMatrix(inputs, 4, 2);
-        additionMatrix(hidden_layer_weights,
-                       multiplyMatrix(inputLayerTransposed, hiddenLayerDelta, 2, 4, 4, outputNeurons),
-                       inputNeurons, hiddenNeurons);
-    }
+    printf("\nsize: %zu\n", sizeof(neuralNetwork));
+
+    freeNeuralNetwork(nn);
 }

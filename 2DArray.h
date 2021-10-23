@@ -6,5 +6,6 @@
 #define XOR_2DARRAY_H
 
 double **create2DArray(int row, int column);
+void freeArray(double **array, int row);
 
 #endif //XOR_2DARRAY_H

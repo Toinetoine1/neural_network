@@ -5,8 +5,6 @@
 #ifndef XOR_MATHUTILS_H
 #define XOR_MATHUTILS_H
 
-double randfrom(double min, double max);
-
 double sigmoid(double x);
 double sigmoidPrime(double x);
 

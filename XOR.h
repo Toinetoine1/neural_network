@@ -5,6 +5,6 @@
 #ifndef NEURAL_NETWORK_XOR_H
 #define NEURAL_NETWORK_XOR_H
 
-void createNeuralNetwork();
+void createAndRunXOR();
 
 #endif //NEURAL_NETWORK_XOR_H
