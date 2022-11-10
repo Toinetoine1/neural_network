@@ -1,4 +1,3 @@
-
 # Created by https://www.toptal.com/developers/gitignore/api/c,clion
 # Edit at https://www.toptal.com/developers/gitignore?templates=c,clion
 
@@ -164,3 +163,4 @@ fabric.properties
 
 # End of https://www.toptal.com/developers/gitignore/api/c,clion
 
+.idea/**

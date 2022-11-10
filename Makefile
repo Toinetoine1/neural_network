@@ -11,3 +11,4 @@ clean:
 	${RM} *.o
 	${RM} *.d
 	${RM} main
+	${RM} xor
