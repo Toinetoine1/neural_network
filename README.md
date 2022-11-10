@@ -3,7 +3,7 @@
 <h3 align="center">Simple XOR in c</h3>
 
   <p align="center">
-    An xor neuralnetwork made in C by an EPITA Student
+    A xor neuralnetwork made in C by an EPITA Student
     <br />
 
 <details>
@@ -31,7 +31,7 @@
 
 This simple neural network was made to create an OCR for a project for EPITA.
 The purpose of our OCR is to solve sudoku grids. The goal of my neural network is to recognize numbers.
-The implementation provided here allows to test my network by training it on an XOR. I did not provide the code for image recognition.
+The implementation provided here allows to test my network by training it on a XOR. I did not provide the code for image recognition.
 
 My implementation is based only on a single hidden layer.
 You can adapt it and use multiple layer if you want.
@@ -49,7 +49,7 @@ Here is how to get a local copy of my Neural Network
 
 1 Clone the repo
    ```sh
-   git clone https://github.com/Toinetoine1/XOR.git
+   git clone https://github.com/Toinetoine1/neural_network.git
    ```
 2 Compile and Run
    ```sh
