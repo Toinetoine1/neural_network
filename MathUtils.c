@@ -2,7 +2,6 @@
 // Created by toinetoine1 on 15/10/2021.
 //
 
-#include <stdlib.h>
 #include <math.h>
 #include "MathUtils.h"
 

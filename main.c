@@ -1,10 +1,10 @@
-#include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
+#include <string.h>
 #include "XOR.h"
 
-int main() {
-    srand (time ( NULL));
+int main(void){
+    srand(time(NULL));
 
     createAndRunXOR();
 

@@ -13,7 +13,7 @@ void createAndRunXOR(){
     struct NeuralNetwork neuralNetwork;
     struct NeuralNetwork* nn = &neuralNetwork;
     neuralNetwork.inputNeurons = 2;
-    neuralNetwork.hiddenNeurons = 2;
+    neuralNetwork.hiddenNeurons = 10;
     neuralNetwork.outputNeurons = 1;
 
     neuralNetwork.learningRate = 0.1;
@@ -59,19 +59,29 @@ void createAndRunXOR(){
 
     trainNeuralNetwork(nn);
 
+    saveNeuralNetworkInFile(nn, "xor.txt");
+
+    printf("Input neurons: %d\n", nn->inputNeurons);
+    printf("Hidden neurons: %d\n", nn->hiddenNeurons);
+    printf("Output neurons: %d\n\n", nn->outputNeurons);
+
+    printf("Learning Rate: %f\n", nn->learningRate);
+    printf("Epoch: %d\n", nn->epoch);
+    printf("Training sets: %d\n\n", nn->trainingSets);
+
+    printf("Result:\n");
+    
     predict(nn, trainingInputs[0]);
-    printf("Result: %f\n", nn->outputLayer[0]);
+    printf("0 and 0: %f\n", nn->outputLayer[0]);
 
     predict(nn, trainingInputs[1]);
-    printf("Result: %f\n", nn->outputLayer[0]);
+    printf("0 and 1: %f\n", nn->outputLayer[0]);
 
     predict(nn, trainingInputs[2]);
-    printf("Result: %f\n", nn->outputLayer[0]);
+    printf("1 and 0: %f\n", nn->outputLayer[0]);
 
     predict(nn, trainingInputs[3]);
-    printf("Result: %f\n", nn->outputLayer[0]);
-
-    printf("\nsize: %zu\n", sizeof(neuralNetwork));
+    printf("1 and 1: %f\n", nn->outputLayer[0]);
 
     freeNeuralNetwork(nn);
 }

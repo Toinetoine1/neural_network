@@ -13,37 +13,37 @@ void swap(int *a, int *b) {
 }
 
 
-void shuffleArray(int array[], int size)
-{
+void shuffleArray(int array[], int size) {
     int i;
-    for(i = size-1; i > 0; i--) {
-        int j = rand() % (i+1);
+    for (i = size - 1; i > 0; i--) {
+        int j = rand() % (i + 1);
         swap(&array[i], &array[j]);
     }
 }
 
-double init_weight() { return ((double)rand())/((double)RAND_MAX); }
+double init_weight() {
+    return ((double) rand()) / ((double) RAND_MAX);
+}
 
 void initMatrixWithRandomValue(double **array, int row, int column) {
-    for(int i = 0; i < row; i++){
-        for(int j = 0; j < column; j++){
-            array[i][j] = init_weight();
+    for (int i = 0; i < row; i++) {
+        for (int j = 0; j < column; j++) {
+            array[i][j] = init_weight() * 2 - 1;
         }
     }
 
 }
 
-void initArrayWithZero(double *array, int row)
-{
+void initArrayWithZero(double *array, int row) {
     for (int i = 0; i < row; i++) {
         array[i] = 0;
     }
 }
 
-void printArray(double **array, int row, int column){
+void printArray(double **array, int row, int column) {
     printf("-------------------------------\n");
-    for(int i = 0; i < row; i++){
-        for(int j = 0; j < column; j++){
+    for (int i = 0; i < row; i++) {
+        for (int j = 0; j < column; j++) {
             printf("%f ", array[i][j]);
         }
         printf("\n");
